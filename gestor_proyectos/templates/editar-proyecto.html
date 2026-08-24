@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Editar Proyecto</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- CDN actualizado y estable de Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+    <style>
+        body {
+            background: #f8fafc;
+        }
+        .form-card {
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+        .form-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.05);
+        }
+        /* Estilo para los campos del formulario */
+        input, textarea {
+            transition: border-color 0.15s ease, box-shadow 0.15s ease;
+        }
+        input:focus, textarea:focus {
+            border-color: #6366f1;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+            outline: none;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4 md:p-8 font-sans antialiased">
+
+    <div class="w-full max-w-2xl bg-white/70 backdrop-blur-sm rounded-3xl shadow-xl p-6 md:p-10 border border-white/40">
+
+        <!-- Cabecera con navegación simple -->
+        <div class="flex items-center gap-3 mb-8 border-b border-slate-200/80 pb-5">
+            <div class="bg-blue-100 p-3 rounded-xl text-blue-600">
+                <i class="fa-solid fa-pen-to-square text-2xl"></i>
+            </div>
+            <div class="flex-1">
+                <h1 class="text-2xl md:text-3xl font-bold text-slate-800 tracking-tight">
+                    Editar Proyecto: {{ proyecto.nombre }}
+                </h1>
+                <p class="text-sm text-slate-500 font-light">
+                    Completa los campos para editar el proyecto
+                </p>
+            </div>
+            <!-- Enlace para volver a la lista -->
+            <a href="{% url 'proyectos' %}" 
+               class="inline-flex items-center gap-1.5 px-4 py-2 bg-slate-100 text-slate-600 text-sm font-medium rounded-xl border border-slate-200/60 hover:bg-slate-200 hover:border-slate-300 transition-all duration-150 shadow-sm hover:shadow">
+                <i class="fa-solid fa-arrow-left"></i>
+                <span class="hidden sm:inline">Volver</span>
+            </a>
+        </div>
+
+        <!-- Formulario para crear proyecto -->
+        <div class="form-card bg-white rounded-2xl p-6 md:p-8 border border-slate-100 shadow-sm">
+            <form method="post" class="space-y-6">
+                {% csrf_token %}
+
+                <!-- Campo: Nombre -->
+                <div class="space-y-1.5">
+                    <label for="id_nombre" class="flex items-center gap-2 text-sm font-semibold text-slate-700">
+                        <i class="fa-solid fa-tag text-indigo-400 text-xs"></i>
+                        Nombre del proyecto
+                    </label>
+                    <input type="text" 
+                           name="nombre" 
+                           id="id_nombre" 
+                           value="{{ proyecto.nombre }}"
+                           required
+                           placeholder="Ej: Desarrollo E-commerce"
+                           class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 placeholder:text-slate-400 text-sm focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 transition-all duration-150" />
+                </div>
+
+                <!-- Campo: Descripción -->
+                <div class="space-y-1.5">
+                    <label for="id_descripcion" class="flex items-center gap-2 text-sm font-semibold text-slate-700">
+                        <i class="fa-solid fa-align-left text-indigo-400 text-xs"></i>
+                        Descripción
+                    </label>
+                    <textarea name="descripcion" 
+                              id="id_descripcion" 
+                              rows="4"
+                              required
+                              placeholder="Describe el objetivo y alcance del proyecto..."
+                              class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 placeholder:text-slate-400 text-sm focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 transition-all duration-150 resize-y"
+                              >{{ proyecto.descripcion }}</textarea>
+                </div>
+
+                <!-- Campo: Duración -->
+                <div class="space-y-1.5">
+                    <label for="id_duracion" class="flex items-center gap-2 text-sm font-semibold text-slate-700">
+                        <i class="fa-regular fa-clock text-indigo-400 text-xs"></i>
+                        Duración estimada
+                    </label>
+                    <input type="number" 
+                           name="duracion" 
+                           id="id_duracion" 
+                           value="{{ proyecto.duracion }}"
+                           required
+                           placeholder="Duración en días: 30, 60, 180"
+                           class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 placeholder:text-slate-400 text-sm focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 transition-all duration-150" />
+                </div>
+
+                <!-- Acciones del formulario -->
+                <div class="pt-4 flex flex-col sm:flex-row items-center gap-3 border-t border-slate-200/60">
+                    <button type="submit" 
+                            class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 bg-indigo-600 text-white text-sm font-medium rounded-xl hover:bg-indigo-700 transition-all duration-150 shadow-md hover:shadow-lg focus:ring-2 focus:ring-indigo-300 focus:ring-offset-2">
+                        <i class="fa-regular fa-circle-check"></i>
+                        Guardar
+                    </button>
+                    <a href="{% url 'proyectos' %}"
+                       class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 bg-slate-100 text-slate-600 text-sm font-medium rounded-xl hover:bg-slate-200 transition-all duration-150 border border-slate-200/60">
+                        <i class="fa-regular fa-circle-xmark"></i>
+                        Cancelar
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>

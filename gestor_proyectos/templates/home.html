@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -17,7 +18,7 @@
     <!-- Icono decorativo (Font Awesome) sin clases personalizadas -->
     <div class="flex justify-center mb-6">
       <div class="w-20 h-20 bg-indigo-100 rounded-full flex items-center justify-center shadow-inner">
-        <i class="fa-solid fa-diagram-project text-4xl text-indigo-600"></i>
+        <img src="{% static 'img/logo.png' %}" alt="Logo" class="w-20 h-20 rounded-full">
       </div>
     </div>
 
@@ -36,11 +37,13 @@
     </p>
 
     <!-- Toque final: badge sutil con "v1.0" (solo estética) -->
-    <div class="mt-8 inline-flex items-center gap-2 bg-indigo-50/70 px-5 py-2 rounded-full border border-indigo-100/60 text-sm text-indigo-700 font-medium shadow-sm">
-      <i class="fa-regular fa-compass text-indigo-400"></i>
-      <span>Empieza ahora</span>
-      <i class="fa-regular fa-arrow-right text-indigo-400 text-xs"></i>
-    </div>
+     <a href="{% url 'proyectos' %}">
+       <div class="mt-8 inline-flex items-center gap-2 bg-indigo-50/70 px-5 py-2 rounded-full border border-indigo-100/60 text-sm text-indigo-700 font-medium shadow-sm">
+         <i class="fa-regular fa-compass text-indigo-400"></i>
+         <span>Empieza ahora</span>
+         <i class="fa-solid fa-arrow-right text-indigo-400 text-xs"></i>
+       </div>
+     </a>
 
     <!-- Nota: solo bienvenida, sin más contenido -->
     <div class="mt-6 text-xs text-slate-400/80 font-mono tracking-wider uppercase">

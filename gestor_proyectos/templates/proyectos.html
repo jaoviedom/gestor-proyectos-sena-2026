@@ -1,100 +1,77 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Gestión de Proyectos</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Font Awesome para iconos (opcional, pero aporta claridad visual) -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-    <style>
-        /* Solo un par de ajustes mínimos para mantenerlo limpio y profesional,
-           todo lo demás es Tailwind puro. No se usan clases personalizadas. */
-        body {
-            background: #f8fafc;
-        }
-        /* Transición suave para las tarjetas */
-        .proyecto-card {
-            transition: transform 0.15s ease, box-shadow 0.15s ease;
-        }
-        .proyecto-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.05);
-        }
-    </style>
-</head>
-<body class="min-h-screen flex items-start justify-center p-4 md:p-8 font-sans antialiased">
+{% extends 'layouts/base.html' %}
 
-    <div class="w-full max-w-4xl bg-white/70 backdrop-blur-sm rounded-3xl shadow-xl p-6 md:p-10 border border-white/40">
+{% block title %}
+Proyectos activos
+{% endblock %}
+{% block content %}
+<div class="max-w-4xl mx-auto bg-white/70 backdrop-blur-sm rounded-2xl shadow-sm p-6 md:p-8 border border-slate-200/60">
 
-        <!-- Cabecera clara -->
-        <div class="flex items-center gap-3 mb-8 border-b border-slate-200/80 pb-5">
-            <div class="bg-indigo-100 p-3 rounded-xl text-indigo-600">
-                <i class="fa-solid fa-list-check text-2xl"></i>
-            </div>
-            <div>
-                <h1 class="text-2xl md:text-3xl font-bold text-slate-800 tracking-tight">
-                    Proyectos activos
-                </h1>
-                <p class="text-sm text-slate-500 font-light">
-                    Lista de todos los proyectos registrados
-                </p>
-            </div>
+    <!-- Cabecera clara -->
+    <div class="flex items-center gap-3 mb-8 border-b border-slate-200/80 pb-5">
+        <div class="bg-indigo-100 p-3 rounded-xl text-indigo-600">
+            <i class="fa-solid fa-list-check text-2xl"></i>
         </div>
-
-        <!-- Lista de proyectos -->
-        {% if proyectos %}
-            <ul class="space-y-4 divide-y divide-slate-100/80">
-                {% for proyecto in proyectos %}
-                <li class="proyecto-card pt-4 first:pt-0 rounded-2xl p-4 -mx-2 hover:bg-slate-50/80 transition-colors duration-200">
-                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
-                        <!-- Información del proyecto (más legible) -->
-                        <div class="flex-1 min-w-0">
-                            <h2 class="text-lg font-semibold text-slate-800 flex items-center gap-2">
-                                <span class="bg-indigo-50 text-indigo-700 text-xs font-mono px-2 py-0.5 rounded-full border border-indigo-100/60">
-                                    #{{ forloop.counter }}
-                                </span>
-                                {{ proyecto.nombre }}
-                            </h2>
-                            <p class="text-sm text-slate-600 mt-0.5 line-clamp-2 max-w-2xl">
-                                {{ proyecto.descripcion }}
-                            </p>
-                            <div class="flex items-center gap-1 mt-1.5 text-xs text-slate-400">
-                                <i class="fa-regular fa-clock"></i>
-                                <span>Duración estimada: <span class="font-medium text-slate-600">{{ proyecto.duracion }}</span></span>
-                            </div>
-                        </div>
-
-                        <!-- Acciones: dos enlaces claros y funcionales -->
-                        <div class="flex items-center gap-2 shrink-0 mt-2 md:mt-0">
-                            <!-- Enlace a detalle -->
-                            <a href="{% url 'ver_proyecto' proyecto.id %}"
-                               class="inline-flex items-center gap-1.5 px-4 py-2 bg-indigo-50 text-indigo-700 text-sm font-medium rounded-xl border border-indigo-200/60 hover:bg-indigo-100 hover:border-indigo-300 transition-all duration-150 shadow-sm hover:shadow">
-                                <i class="fa-regular fa-eye"></i>
-                                <span class="hidden sm:inline">Ver</span> detalle
-                            </a>
-                            <!-- Enlace a eliminar (con estilo sutil pero distinguible) -->
-                            <a href="{% url 'eliminar_proyecto' proyecto.id %}"
-                                onclick="return confirm('¿Está seguro de eliminar el proyecto?')"
-                                class="inline-flex items-center gap-1.5 px-4 py-2 bg-rose-50 text-rose-600 text-sm font-medium rounded-xl border border-rose-200/60 hover:bg-rose-100 hover:border-rose-300 transition-all duration-150 shadow-sm hover:shadow">
-                                <i class="fa-regular fa-trash-can"></i>
-                                <span class="hidden sm:inline">Eliminar</span>
-                            </a>
-                        </div>
-                    </div>
-                </li>
-                {% endfor %}
-            </ul>
-        {% else %}
-            <!-- Mensaje cuando no hay proyectos, manteniendo la coherencia visual -->
-            <div class="text-center py-12 px-4 bg-slate-50/60 rounded-2xl border border-dashed border-slate-200">
-                <i class="fa-regular fa-folder-open text-4xl text-slate-300 mb-3"></i>
-                <p class="text-slate-500 font-light text-lg">No hay proyectos disponibles</p>
-                <p class="text-sm text-slate-400 mt-1">Comienza creando tu primer proyecto.</p>
-            </div>
-        {% endif %}
-
+        <div>
+            <h1 class="text-2xl md:text-3xl font-bold text-slate-800 tracking-tight">
+                Proyectos activos
+            </h1>
+            <p class="text-sm text-slate-500 font-light">
+                Lista de todos los proyectos registrados
+            </p>
+        </div>
     </div>
 
-</body>
-</html>
+    <!-- Lista de proyectos -->
+    {% if proyectos %}
+        <ul class="space-y-4 divide-y divide-slate-100/80">
+            {% for proyecto in proyectos %}
+            <li class="proyecto-card pt-4 first:pt-0 rounded-2xl p-4 -mx-2 hover:bg-slate-50/80 transition-colors duration-200">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
+                    <!-- Información del proyecto (más legible) -->
+                    <div class="flex-1 min-w-0">
+                        <h2 class="text-lg font-semibold text-slate-800 flex items-center gap-2">
+                            <span class="bg-indigo-50 text-indigo-700 text-xs font-mono px-2 py-0.5 rounded-full border border-indigo-100/60">
+                                #{{ forloop.counter }}
+                            </span>
+                            {{ proyecto.nombre }}
+                        </h2>
+                        <p class="text-sm text-slate-600 mt-0.5 line-clamp-2 max-w-2xl">
+                            {{ proyecto.descripcion }}
+                        </p>
+                        <div class="flex items-center gap-1 mt-1.5 text-xs text-slate-400">
+                            <i class="fa-regular fa-clock"></i>
+                            <span>Duración estimada: <span class="font-medium text-slate-600">{{ proyecto.duracion }}</span></span>
+                        </div>
+                    </div>
+
+                    <!-- Acciones: dos enlaces claros y funcionales -->
+                    <div class="flex items-center gap-2 shrink-0 mt-2 md:mt-0">
+                        <!-- Enlace a detalle -->
+                        <a href="{% url 'ver_proyecto' proyecto.id %}"
+                           class="inline-flex items-center gap-1.5 px-4 py-2 bg-indigo-50 text-indigo-700 text-sm font-medium rounded-xl border border-indigo-200/60 hover:bg-indigo-100 hover:border-indigo-300 transition-all duration-150 shadow-sm hover:shadow">
+                            <i class="fa-regular fa-eye"></i>
+                            <span class="hidden sm:inline">Ver</span> detalle
+                        </a>
+                        <!-- Enlace a eliminar (con estilo sutil pero distinguible) -->
+                        <a href="{% url 'eliminar_proyecto' proyecto.id %}"
+                            onclick="return confirm('¿Está seguro de eliminar el proyecto?')"
+                            class="inline-flex items-center gap-1.5 px-4 py-2 bg-rose-50 text-rose-600 text-sm font-medium rounded-xl border border-rose-200/60 hover:bg-rose-100 hover:border-rose-300 transition-all duration-150 shadow-sm hover:shadow">
+                            <i class="fa-regular fa-trash-can"></i>
+                            <span class="hidden sm:inline">Eliminar</span>
+                        </a>
+                    </div>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <!-- Mensaje cuando no hay proyectos, manteniendo la coherencia visual -->
+        <div class="text-center py-12 px-4 bg-slate-50/60 rounded-2xl border border-dashed border-slate-200">
+            <i class="fa-regular fa-folder-open text-4xl text-slate-300 mb-3"></i>
+            <p class="text-slate-500 font-light text-lg">No hay proyectos disponibles</p>
+            <p class="text-sm text-slate-400 mt-1">Comienza creando tu primer proyecto.</p>
+        </div>
+    {% endif %}
+
+</div>
+{% endblock %}

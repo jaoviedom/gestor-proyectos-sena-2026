@@ -3,41 +3,172 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crear Tarea</title>
+    <title>Crear Tarea · Django</title>
+    <!-- Tailwind CSS v3 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome para iconos consistentes -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        /* Mismos estilos base que en la lista y detalle */
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f8fafc;
+        }
+        .form-card {
+            transition: box-shadow 0.15s ease, transform 0.1s ease;
+        }
+        .form-card:hover {
+            box-shadow: 0 8px 20px rgba(0,0,0,0.04), 0 2px 6px rgba(0,0,0,0.02);
+            transform: translateY(-1px);
+        }
+        .enlace-accion {
+            transition: color 0.15s, background-color 0.15s;
+        }
+        .enlace-accion:hover {
+            background-color: #f1f5f9;
+        }
+        .campo-label {
+            letter-spacing: 0.01em;
+        }
+        /* Estilo para inputs y selects */
+        input, select {
+            transition: border-color 0.15s, box-shadow 0.15s;
+        }
+        input:focus, select:focus {
+            outline: none;
+            border-color: #6366f1;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+    </style>
 </head>
-<body>
-    <h1>Agregar tarea a: <span> {{ proyecto.nombre }}</span></h1>
+<body class="antialiased text-slate-700 p-4 md:p-6">
 
-    <form method="post">
-        {% csrf_token %}
-
-        <div class="space-y-1.5">
-            <label for="titulo">Titulo de la tarea:</label>
-            <input type="text" name="titulo" id="titulo" placeholder="Ej. Diseñar una base de datos" required>
+    <main class="max-w-4xl mx-auto bg-white/70 backdrop-blur-sm rounded-2xl shadow-sm p-6 md:p-8 border border-slate-200/60">
+        
+        <!-- encabezado con navegación (estilo consistente) -->
+        <div class="flex flex-wrap items-center justify-between gap-4 mb-6 border-b border-slate-200/80 pb-4">
+            <div class="flex items-center gap-3">
+                <a href="{% url 'ver_proyecto' proyecto.id %}" 
+                   class="inline-flex items-center gap-1.5 text-sm font-medium text-slate-500 hover:text-slate-700 transition-colors enlace-accion px-3 py-1.5 rounded-lg -ml-2">
+                    <i class="fa-regular fa-square-caret-left"></i>
+                    Volver al proyecto
+                </a>
+                <span class="text-slate-300">|</span>
+                <h1 class="text-2xl font-semibold tracking-tight text-slate-800 flex items-center gap-2">
+                    <span class="bg-slate-800 text-white text-sm font-medium px-3 py-1 rounded-full">+</span>
+                    Crear Tarea
+                </h1>
+            </div>
+            <div class="text-sm bg-slate-100 px-4 py-1.5 rounded-full text-slate-600 shadow-sm">
+                <i class="fa-regular fa-folder-open text-indigo-500 mr-1"></i>
+                {{ proyecto.nombre|truncatechars:20 }}
+            </div>
         </div>
 
-        <div class="space-y-1.5">
+        <!-- Tarjeta del formulario (mismo estilo que tarjetas de lista) -->
+        <div class="form-card bg-white border border-slate-200/80 rounded-xl p-6 md:p-8 shadow-sm">
+            
+            <!-- Título del formulario -->
+            <div class="flex items-center gap-3 mb-6 pb-4 border-b border-slate-200/60">
+                <div class="bg-indigo-50 p-2.5 rounded-xl text-indigo-500">
+                    <i class="fa-solid fa-list-check text-xl"></i>
+                </div>
+                <div>
+                    <h2 class="text-xl font-semibold text-slate-800">
+                        Agregar tarea a: <span class="text-indigo-600">{{ proyecto.nombre }}</span>
+                    </h2>
+                    <p class="text-sm text-slate-500">Completa los campos para crear una nueva tarea</p>
+                </div>
+            </div>
 
-            <label for="prioridad">Prioridad</label>
-            <select name="prioridad" id="prioridad">
-                {% for valor, etiqueta in prioridad_choices %}
-                    <option value="{{ valor }}" {% if valor == 'MEDIA' %} selected {% endif %} >{{ etiqueta }}
-                    </option>
-                {% endfor %}
-            </select>
+            <form method="post" class="space-y-6">
+                {% csrf_token %}
+
+                <!-- Campo: Título -->
+                <div class="space-y-1.5">
+                    <label for="titulo" class="text-sm font-medium text-slate-700 flex items-center gap-2">
+                        <i class="fa-regular fa-pen-to-square text-slate-400"></i>
+                        Título de la tarea
+                    </label>
+                    <input type="text" 
+                           name="titulo" 
+                           id="titulo" 
+                           placeholder="Ej. Diseñar una base de datos" 
+                           required
+                           class="w-full px-4 py-2.5 bg-slate-50/70 border border-slate-200/80 rounded-xl text-slate-700 placeholder:text-slate-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all">
+                </div>
+
+                <!-- Campo: Prioridad -->
+                <div class="space-y-1.5">
+                    <label for="prioridad" class="text-sm font-medium text-slate-700 flex items-center gap-2">
+                        <i class="fa-regular fa-flag text-slate-400"></i>
+                        Prioridad
+                    </label>
+                    <select name="prioridad" 
+                            id="prioridad"
+                            class="w-full px-4 py-2.5 bg-slate-50/70 border border-slate-200/80 rounded-xl text-slate-700 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all appearance-none">
+                        {% for valor, etiqueta in prioridad_choices %}
+                            <option value="{{ valor }}" {% if valor == 'MEDIA' %} selected {% endif %}>
+                                {{ etiqueta }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Campo: Estado -->
+                <div class="space-y-1.5">
+                    <label for="estado" class="text-sm font-medium text-slate-700 flex items-center gap-2">
+                        <i class="fa-regular fa-circle-check text-slate-400"></i>
+                        Estado
+                    </label>
+                    <select name="estado" 
+                            id="estado"
+                            class="w-full px-4 py-2.5 bg-slate-50/70 border border-slate-200/80 rounded-xl text-slate-700 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all appearance-none">
+                        {% for valor, etiqueta in estado_choices %}
+                            <option value="{{ valor }}" {% if valor == 'PENDIENTE' %} selected {% endif %}>
+                                {{ etiqueta }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Botones de acción -->
+                <div class="flex flex-wrap items-center gap-3 pt-4 border-t border-slate-200/60 mt-6">
+                    <button type="submit" 
+                            class="inline-flex items-center gap-2 px-6 py-2.5 bg-indigo-600 text-white text-sm font-medium rounded-xl border border-indigo-600 hover:bg-indigo-700 hover:border-indigo-700 transition-all duration-150 shadow-sm hover:shadow">
+                        <i class="fa-regular fa-floppy-disk"></i>
+                        Guardar tarea
+                    </button>
+                    <a href="{% url 'ver_proyecto' proyecto.id %}" 
+                       class="enlace-accion inline-flex items-center gap-2 px-5 py-2.5 text-sm font-medium text-slate-600 bg-slate-100/80 hover:bg-slate-200/80 rounded-lg transition-colors">
+                        <i class="fa-regular fa-xmark"></i>
+                        Cancelar
+                    </a>
+                    <span class="text-xs text-slate-400 ml-auto">Los campos con <span class="text-rose-500">*</span> son obligatorios</span>
+                </div>
+            </form>
         </div>
-         <div class="space-y-1.5">
 
-            <label for="estado">Estado</label>
-            <select name="estado" id="estado">
-                {% for valor, etiqueta in estado_choices %}
-                    <option value="{{ valor }}" {% if valor == 'PENDIENTE' %} selected {% endif %} >{{ etiqueta }}
-                    </option>
-                {% endfor %}
-            </select>
+        <!-- pie de página sutil (igual que en lista y detalle) -->
+        <div class="mt-8 pt-4 border-t border-slate-200/60 text-xs text-slate-400 flex flex-wrap justify-between items-center">
+            <span class="flex items-center gap-2">
+                <i class="fa-regular fa-circle-check text-emerald-400"></i>
+                Crear tarea · Django + Tailwind
+            </span>
+            <span class="flex gap-3">
+                <span class="inline-flex items-center gap-1">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-300"></span> 
+                    Proyecto: {{ proyecto.nombre|truncatechars:20 }}
+                </span>
+                <span class="inline-flex items-center gap-1">
+                    <i class="fa-regular fa-square-caret-left text-indigo-400"></i>
+                    <a href="{% url 'ver_proyecto' proyecto.id %}" class="hover:text-indigo-500 transition-colors">
+                        Volver
+                    </a>
+                </span>
+            </span>
         </div>
-        <button type="submit">Guardar</button>
+    </main>
 
-    </form>
 </body>
 </html>

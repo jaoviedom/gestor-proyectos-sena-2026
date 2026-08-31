@@ -27,12 +27,14 @@ def nuevo_proyecto(request):
     nombre = request.POST.get('nombre')
     descripcion = request.POST.get('descripcion')
     duracion = request.POST.get('duracion')
+    imagen = request.FILES.get('imagen')
 
     if nombre and descripcion and duracion:
       proyecto = Proyecto(
         nombre=nombre,
         descripcion=descripcion,
-        duracion=duracion
+        duracion=duracion,
+        imagen=imagen
       )
       proyecto.save()
     

@@ -1,0 +1,276 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro · Gestor de Proyectos</title>
+    <!-- Tailwind CSS v4 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f8fafc;
+        }
+        .register-card {
+            transition: box-shadow 0.15s ease, transform 0.1s ease;
+        }
+        .register-card:hover {
+            box-shadow: 0 8px 20px rgba(0,0,0,0.04), 0 2px 6px rgba(0,0,0,0.02);
+            transform: translateY(-1px);
+        }
+        input {
+            transition: border-color 0.15s, box-shadow 0.15s;
+        }
+        input:focus {
+            outline: none;
+            border-color: #6366f1;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+        .btn-primary {
+            transition: all 0.15s ease;
+        }
+        .btn-primary:hover {
+            transform: translateY(-1px);
+        }
+        .btn-primary:active {
+            transform: translateY(0px);
+        }
+        .error-message {
+            animation: fadeIn 0.3s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        /* Iconos SVG inline de Tailwind 4 (Heroicons) */
+        .icon {
+            width: 1.25rem;
+            height: 1.25rem;
+            flex-shrink: 0;
+        }
+        .icon-sm {
+            width: 1rem;
+            height: 1rem;
+            flex-shrink: 0;
+        }
+    </style>
+</head>
+<body class="antialiased text-slate-700 min-h-screen flex items-center justify-center p-4 md:p-6">
+
+    <main class="w-full max-w-lg">
+        <!-- Tarjeta de registro -->
+        <div class="register-card bg-white border border-slate-200/80 rounded-2xl p-6 md:p-8 shadow-sm">
+            
+            <!-- Logo y título -->
+            <div class="text-center mb-8">
+                <div class="w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg mx-auto mb-4">
+                    <img src="{% static 'img/logo.png' %}" alt="Logo">
+                </div>
+                <h1 class="text-2xl font-bold text-slate-800">Crear cuenta</h1>
+                <p class="text-sm text-slate-500 mt-1">Regístrate para comenzar a gestionar tus proyectos</p>
+            </div>
+
+            <!-- Formulario de registro -->
+            <form method="post" class="space-y-4">
+                {% csrf_token %}
+                
+                <!-- Campo: Usuario -->
+                <div class="space-y-1.5">
+                    <label for="username" class="text-sm font-medium text-slate-700 flex items-center gap-2">
+                        <!-- Icono User (Heroicons) -->
+                        <svg class="icon-sm text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+                        </svg>
+                        Usuario
+                    </label>
+                    <input 
+                        type="text" 
+                        name="username" 
+                        id="username"
+                        value="{{ form.username.value|default:'' }}"
+                        required
+                        placeholder="Ej. juan123"
+                        class="w-full px-4 py-2.5 bg-slate-50/70 border border-slate-200/80 rounded-xl text-slate-700 placeholder:text-slate-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all"
+                    >
+                    {% if form.username.errors %}
+                        <div class="error-message text-xs text-rose-600 mt-1 flex items-center gap-1">
+                            <svg class="icon-sm" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
+                            </svg>
+                            {{ form.username.errors }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Campo: Nombre -->
+                <div class="space-y-1.5">
+                    <label for="first_name" class="text-sm font-medium text-slate-700 flex items-center gap-2">
+                        <!-- Icono User (Heroicons) -->
+                        <svg class="icon-sm text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+                        </svg>
+                        Nombre
+                    </label>
+                    <input 
+                        type="text" 
+                        name="first_name" 
+                        id="first_name"
+                        value="{{ form.first_name.value|default:'' }}"
+                        required
+                        placeholder="Ej. Juan"
+                        class="w-full px-4 py-2.5 bg-slate-50/70 border border-slate-200/80 rounded-xl text-slate-700 placeholder:text-slate-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all"
+                    >
+                    {% if form.first_name.errors %}
+                        <div class="error-message text-xs text-rose-600 mt-1 flex items-center gap-1">
+                            <svg class="icon-sm" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
+                            </svg>
+                            {{ form.first_name.errors }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Campo: Apellido -->
+                <div class="space-y-1.5">
+                    <label for="last_name" class="text-sm font-medium text-slate-700 flex items-center gap-2">
+                        <!-- Icono User (Heroicons) -->
+                        <svg class="icon-sm text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+                        </svg>
+                        Apellido
+                    </label>
+                    <input 
+                        type="text" 
+                        name="last_name" 
+                        id="last_name"
+                        value="{{ form.last_name.value|default:'' }}"
+                        required
+                        placeholder="Ej. Pérez"
+                        class="w-full px-4 py-2.5 bg-slate-50/70 border border-slate-200/80 rounded-xl text-slate-700 placeholder:text-slate-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all"
+                    >
+                    {% if form.last_name.errors %}
+                        <div class="error-message text-xs text-rose-600 mt-1 flex items-center gap-1">
+                            <svg class="icon-sm" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
+                            </svg>
+                            {{ form.last_name.errors }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Campo: Email -->
+                <div class="space-y-1.5">
+                    <label for="email" class="text-sm font-medium text-slate-700 flex items-center gap-2">
+                        <!-- Icono Envelope (Heroicons) -->
+                        <svg class="icon-sm text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
+                        </svg>
+                        Correo electrónico
+                    </label>
+                    <input 
+                        type="email" 
+                        name="email" 
+                        id="email"
+                        value="{{ form.email.value|default:'' }}"
+                        required
+                        placeholder="ejemplo@correo.com"
+                        class="w-full px-4 py-2.5 bg-slate-50/70 border border-slate-200/80 rounded-xl text-slate-700 placeholder:text-slate-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all"
+                    >
+                    {% if form.email.errors %}
+                        <div class="error-message text-xs text-rose-600 mt-1 flex items-center gap-1">
+                            <svg class="icon-sm" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
+                            </svg>
+                            {{ form.email.errors }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Campo: Contraseña -->
+                <div class="space-y-1.5">
+                    <label for="password1" class="text-sm font-medium text-slate-700 flex items-center gap-2">
+                        <!-- Icono Lock Closed (Heroicons) -->
+                        <svg class="icon-sm text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
+                        </svg>
+                        Contraseña
+                    </label>
+                    <input 
+                        type="password"
+                        name="password1"
+                        id="password1"
+                        required
+                        placeholder="********"
+                        class="w-full px-4 py-2.5 bg-slate-50/70 border border-slate-200/80 rounded-xl text-slate-700 placeholder:text-slate-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all"
+                    >
+                    {% if form.password1.errors %}
+                        <div class="error-message text-xs text-rose-600 mt-1 flex items-center gap-1">
+                            <svg class="icon-sm" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
+                            </svg>
+                            {{ form.password1.errors }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Campo: Confirmar contraseña -->
+                <div class="space-y-1.5">
+                    <label for="password2" class="text-sm font-medium text-slate-700 flex items-center gap-2">
+                        <!-- Icono Lock Closed (Heroicons) -->
+                        <svg class="icon-sm text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
+                        </svg>
+                        Confirmar contraseña
+                    </label>
+                    <input 
+                        type="password"
+                        name="password2"
+                        id="password2"
+                        required
+                        placeholder="********"
+                        class="w-full px-4 py-2.5 bg-slate-50/70 border border-slate-200/80 rounded-xl text-slate-700 placeholder:text-slate-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all"
+                    >
+                    {% if form.password2.errors %}
+                        <div class="error-message text-xs text-rose-600 mt-1 flex items-center gap-1">
+                            <svg class="icon-sm" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
+                            </svg>
+                            {{ form.password2.errors }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Botón de submit -->
+                <button type="submit" 
+                        class="btn-primary w-full inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-indigo-600 text-white text-sm font-medium rounded-xl border border-indigo-600 hover:bg-indigo-700 hover:border-indigo-700 transition-all duration-150 shadow-sm hover:shadow mt-2">
+                    <!-- Icono User Plus (Heroicons) -->
+                    <svg class="icon-sm" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M18 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0ZM3 19.235v-.11a6.375 6.375 0 0 1 12.75 0v.109A12.318 12.318 0 0 1 9.374 21c-2.331 0-4.512-.645-6.374-1.766Z" />
+                    </svg>
+                    Crear cuenta
+                </button>
+            </form>
+
+            <!-- Enlace a login -->
+            <div class="mt-6 text-center text-sm text-slate-500 border-t border-slate-200/60 pt-5">
+                ¿Ya tienes cuenta? 
+                <a href="{% url 'login' %}" class="font-medium text-indigo-600 hover:text-indigo-700 hover:underline transition-colors">
+                    Inicia sesión
+                </a>
+            </div>
+        </div>
+
+        <!-- Pie de página sutil -->
+        <div class="mt-6 text-xs text-slate-400 text-center">
+            <span class="flex items-center justify-center gap-2">
+                <svg class="icon-sm text-emerald-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                </svg>
+                Gestor de Proyectos · Django + Tailwind
+            </span>
+        </div>
+    </main>
+
+</body>
+</html>

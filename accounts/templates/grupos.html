@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grupos</title>
+</head>
+<body>
+  <h1>Grupos</h1>
+  <form method="post">
+    {% csrf_token %}
+    <div>
+      <label for="nombre">Nombre</label>
+      <input type="text" name="nombre" id="nombre" required maxlength="150" placeholder="Nombre del grupo">
+    </div>
+    <button type="submit">Agregar grupo</button>
+
+  </form>
+  {% if grupos %}
+    <ul>
+      {% for grupo in grupos %}
+        <li>{{ grupo.name }}</li>
+      {% endfor %}
+      </ul>
+  {% else %}
+    <p>No hay grupos registrados</p>
+  {% endif %}
+</body>
+</html>

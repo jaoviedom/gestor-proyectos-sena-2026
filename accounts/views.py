@@ -63,6 +63,13 @@ def eliminar_grupo(request, id_grupo):
 
   return redirect('grupos')
 
+def dar_miembros(grupo):
+  return grupo.user_set.all()
+
+def dar_no_miembros(grupo):
+  miembros = dar_miembros(grupo)
+  return User.objects.exclude(id__in=miembros.values_list('id', flat=True))
+
 @user_passes_test(es_admin)
 def editar_grupo(request, id_grupo):
   grupo = get_object_or_404(Group, id=id_grupo)
@@ -72,5 +79,38 @@ def editar_grupo(request, id_grupo):
     grupo.save()
   
     return redirect('grupos')
+  
+  miembros = dar_miembros(grupo)
+  no_miembros = dar_no_miembros(grupo)
 
-  return render(request, 'editar_grupo.html', {'grupo': grupo})
+  return render(request, 'editar_grupo.html', {
+    'grupo': grupo,
+    'miembros': miembros,
+    'no_miembros': no_miembros,
+    })
+
+@user_passes_test(es_admin)
+def agregar_usuario_grupo(request, id_grupo):
+  grupo = get_object_or_404(Group, id=id_grupo)
+  if request.method == "POST":
+    id_user = request.POST.get('id_user')
+    if id_user:
+      user = get_object_or_404(User, id=id_user)
+      grupo.user_set.add(user)
+    
+    return redirect('editar_grupo', id_grupo=grupo.id)
+
+  return render(request, 'editar_grupo', id_grupo=grupo.id)
+
+@user_passes_test(es_admin)
+def eliminar_usuario_grupo(request, id_grupo):
+  grupo = get_object_or_404(Group, id=id_grupo)
+  if request.method == "POST":
+    id_user = request.POST.get('id_user')
+    if id_user:
+      user = get_object_or_404(User, id=id_user)
+      grupo.user_set.remove(user)
+    
+    return redirect('editar_grupo', id_grupo=grupo.id)
+
+  return render(request, 'editar_grupo', id_grupo=grupo.id)

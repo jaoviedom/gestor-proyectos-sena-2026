@@ -27,7 +27,7 @@
                         Editar grupo
                         <span class="text-sm font-normal text-slate-400 ml-2">#{{ grupo.id }}</span>
                     </h1>
-                    <p class="text-sm text-slate-500">Modifica el nombre del grupo de usuarios</p>
+                    <p class="text-sm text-slate-500">Modifica el nombre del grupo y administra sus miembros</p>
                 </div>
             </div>
         </div>
@@ -74,16 +74,112 @@
                         </svg>
                         Guardar cambios
                     </button>
-                    <a href="{% url 'grupos' %}" 
-                       class="inline-flex items-center justify-center gap-2 px-6 py-2.5 text-sm font-medium text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-lg transition-all">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                        Cancelar
-                    </a>
                 </div>
             </div>
         </form>
+
+        <!-- Miembros del grupo -->
+        <div class="border-t border-slate-200/60">
+            <div class="px-6 py-4 bg-indigo-50/30 border-b border-slate-200/60">
+                <h2 class="text-sm font-semibold text-slate-700 flex items-center gap-2">
+                    <svg class="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z" />
+                    </svg>
+                    Miembros del grupo
+                    <span class="text-xs font-normal text-slate-400 ml-auto">
+                        {{ miembros|length }} miembro{{ miembros|length|pluralize }}
+                    </span>
+                </h2>
+            </div>
+            
+            {% if miembros %}
+                <ul class="divide-y divide-slate-200/60">
+                    {% for miembro in miembros %}
+                        <li class="px-6 py-3 hover:bg-slate-50/50 transition-colors flex items-center justify-between group">
+                            <div class="flex items-center gap-3 min-w-0">
+                                <div class="min-w-0">
+                                    <span class="text-sm font-medium text-slate-700 truncate block">
+                                        {{ miembro.get_full_name|default:miembro.username }}
+                                    </span>
+                                    <span class="text-xs text-slate-400">@{{ miembro.username }}</span>
+                                </div>
+                            </div>
+                            <form action="{% url 'eliminar_usuario_grupo' grupo.id %}" method="post" class="flex-shrink-0">
+                                {% csrf_token %}
+                                <input type="hidden" name="id_user" value="{{ miembro.id }}">
+                                <button type="submit" 
+                                        class="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg transition-all"
+                                        title="Eliminar miembro del grupo"
+                                        onclick="return confirm('¿Estás seguro de eliminar a {{ miembro.get_full_name|default:miembro.username }} del grupo?')">
+                                    <i class="fa-solid fa-user-minus text-lg"></i>
+                                </button>
+                            </form>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <div class="px-6 py-8 text-center">
+                    <div class="flex flex-col items-center gap-2">
+                        <svg class="w-10 h-10 text-slate-300" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z" />
+                        </svg>
+                        <p class="text-sm text-slate-500">Este grupo no tiene miembros aún</p>
+                        <p class="text-xs text-slate-400">Agrega usuarios desde la lista de disponibles</p>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Usuarios disponibles -->
+        <div class="border-t border-slate-200/60">
+            <div class="px-6 py-4 bg-slate-50/50 border-b border-slate-200/60">
+                <h2 class="text-sm font-semibold text-slate-700 flex items-center gap-2">
+                    <svg class="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z" />
+                    </svg>
+                    Usuarios disponibles
+                    <span class="text-xs font-normal text-slate-400 ml-auto">
+                        {{ no_miembros|length }} usuario{{ no_miembros|length|pluralize }}
+                    </span>
+                </h2>
+            </div>
+            
+            {% if no_miembros %}
+                <ul class="divide-y divide-slate-200/60">
+                    {% for usuario in no_miembros %}
+                        <li class="px-6 py-3 hover:bg-slate-50/50 transition-colors flex items-center justify-between group">
+                            <div class="flex items-center gap-3 min-w-0">
+                                <div class="min-w-0">
+                                    <span class="text-sm font-medium text-slate-700 truncate block">
+                                        {{ usuario.get_full_name|default:usuario.username }}
+                                    </span>
+                                    <span class="text-xs text-slate-400">@{{ usuario.username }}</span>
+                                </div>
+                            </div>
+                            <form action="{% url 'agregar_usuario_grupo' grupo.id %}" method="post" class="flex-shrink-0">
+                                {% csrf_token %}
+                                <input type="hidden" name="id_user" value="{{ usuario.id }}">
+                                <button type="submit" 
+                                        class="p-2 text-emerald-500 hover:text-emerald-700 hover:bg-emerald-50 rounded-lg transition-all"
+                                        title="Agregar usuario al grupo">
+                                    <i class="fa-solid fa-user-plus text-lg"></i>
+                                </button>
+                            </form>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <div class="px-6 py-8 text-center">
+                    <div class="flex flex-col items-center gap-2">
+                        <svg class="w-10 h-10 text-emerald-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <p class="text-sm text-slate-500">Todos los usuarios disponibles ya son miembros</p>
+                        <p class="text-xs text-slate-400">No hay usuarios pendientes para agregar</p>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
     </div>
 </div>
 

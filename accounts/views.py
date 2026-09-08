@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login
 from django.contrib.auth.models import User, Group
 from django.contrib.auth.decorators import user_passes_test
@@ -54,3 +54,23 @@ def grupos(request):
 
   grupos = Group.objects.all()
   return render(request, 'grupos.html', {'grupos': grupos})
+
+@user_passes_test(es_admin)
+def eliminar_grupo(request, id_grupo):
+  if request.method == "POST":
+    grupo = get_object_or_404(Group, id=id_grupo)
+    grupo.delete()
+
+  return redirect('grupos')
+
+@user_passes_test(es_admin)
+def editar_grupo(request, id_grupo):
+  grupo = get_object_or_404(Group, id=id_grupo)
+  if request.method == "POST":
+    nuevo_nombre = request.POST.get('name').strip()
+    grupo.name = nuevo_nombre
+    grupo.save()
+  
+    return redirect('grupos')
+
+  return render(request, 'editar_grupo.html', {'grupo': grupo})

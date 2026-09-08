@@ -69,6 +69,18 @@
             box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
             outline: none;
         }
+        /* Estilos para el dropdown del usuario */
+        .dropdown-menu {
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-8px);
+            transition: all 0.15s ease;
+        }
+        .dropdown-open .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
     </style>
 </head>
 <body class="antialiased text-slate-700 min-h-screen flex flex-col">
@@ -81,10 +93,6 @@
                 <div class="flex items-center gap-3">
                     <div class="flex items-center gap-2.5">
                         <div class="w-9 h-9 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center shadow-md">
-                            <!-- Icono Folder (Heroicons) -->
-                            <!-- <svg class="icon text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M2.25 12.75V12A2.25 2.25 0 0 1 4.5 9.75h15A2.25 2.25 0 0 1 21.75 12v.75m-8.69-6.44-2.12-2.12a1.5 1.5 0 0 0-1.061-.44H4.5A2.25 2.25 0 0 0 2.25 6v12a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9a2.25 2.25 0 0 0-2.25-2.25h-5.379a1.5 1.5 0 0 1-1.06-.44Z" />
-                            </svg> -->
                             <img src="{% static 'img/logo.png' %}" alt="Logo" class="p-1">
                         </div>
                         <span class="text-lg font-semibold text-slate-800 tracking-tight hidden sm:block">
@@ -111,9 +119,22 @@
                         </svg>
                         <span class="hidden xs:inline">Proyectos</span>
                     </a>
+                    
+                    <!-- Enlace Grupos con el mismo estilo que el resto -->
+                    {% if user.is_staff %}
+                        <a href="{% url 'grupos' %}" 
+                           class="nav-link inline-flex items-center gap-1.5 px-3 sm:px-4 py-2 text-sm font-medium text-slate-600 hover:text-indigo-600 hover:bg-indigo-50/80 rounded-lg transition-all">
+                            <!-- Icono para Grupos (Users) -->
+                            <svg class="icon-sm" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z" />
+                            </svg>
+                            <span class="hidden xs:inline">Grupos</span>
+                        </a>
+                    {% endif %}
+
                     <a href="{% url 'nuevo_proyecto' %}" 
                       class="nav-link inline-flex items-center gap-1.5 px-3 sm:px-4 py-2 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg transition-all shadow-sm hover:shadow">
-                        <!-- Icono Plus (Heroicons) - más adecuado para "Nuevo proyecto" -->
+                        <!-- Icono Plus (Heroicons) -->
                         <svg class="icon-sm" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M12 4.5v15m7.5-7.5h-15" />
                         </svg>
@@ -132,10 +153,63 @@
                         <span class="hidden sm:inline">Acerca de</span>
                     </a>
 
-                    <form action="{% url 'logout' %}" method="post">
-                        {% csrf_token %}
-                        <button type="submit">Cerrar sesión</button>
-                    </form>
+                    <!-- Separador -->
+                    <span class="w-px h-6 bg-slate-200 mx-1 hidden sm:block"></span>
+
+                    <!-- Dropdown del usuario -->
+                    <div class="relative" x-data="{ open: false }" @click.away="open = false">
+                        <button @click="open = !open" 
+                                class="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-slate-600 hover:text-indigo-600 hover:bg-indigo-50/80 rounded-lg transition-all nav-link">
+                            <svg class="icon-sm" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+                            </svg>
+                            <span>{{ user.username }}</span>
+                            <svg class="icon-sm transition-transform duration-150" :class="{ 'rotate-180': open }" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+                            </svg>
+                        </button>
+
+                        <!-- Menú desplegable -->
+                        <div x-show="open" 
+                             x-transition:enter="transition ease-out duration-150" 
+                             x-transition:enter-start="opacity-0 translate-y-[-8px]" 
+                             x-transition:enter-end="opacity-100 translate-y-0"
+                             x-transition:leave="transition ease-in duration-100" 
+                             x-transition:leave-start="opacity-100 translate-y-0" 
+                             x-transition:leave-end="opacity-0 translate-y-[-8px]"
+                             class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-slate-200/60 py-1 overflow-hidden z-50"
+                             style="display: none;"
+                             x-cloak>
+                            
+                            <!-- Nombre completo del usuario -->
+                            <div class="px-4 py-2 border-b border-slate-200/60">
+                                <p class="text-sm font-medium text-slate-800">{{ user.get_full_name|default:user.username }}</p>
+                                <p class="text-xs text-slate-500">{{ user.email }}</p>
+                            </div>
+                            
+                            <!-- Opciones del menú -->
+                            <a href="#" class="flex items-center gap-2 px-4 py-2 text-sm text-slate-600 hover:bg-indigo-50/80 hover:text-indigo-600 transition-colors">
+                                <svg class="icon-sm" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+                                </svg>
+                                Mi perfil
+                            </a>
+                            
+                            <!-- Línea separadora -->
+                            <div class="border-t border-slate-200/60 my-1"></div>
+                            
+                            <!-- Cerrar sesión -->
+                            <form action="{% url 'logout' %}" method="post" class="block">
+                                {% csrf_token %}
+                                <button type="submit" class="flex items-center gap-2 w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50/80 transition-colors">
+                                    <svg class="icon-sm" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9" />
+                                    </svg>
+                                    Cerrar sesión
+                                </button>
+                            </form>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -175,6 +249,9 @@
             </div>
         </div>
     </footer>
+
+    <!-- Alpine.js para el dropdown -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
 </body>
 </html>

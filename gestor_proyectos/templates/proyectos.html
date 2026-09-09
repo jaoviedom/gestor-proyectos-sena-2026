@@ -54,12 +54,14 @@ Proyectos activos
                             <span class="hidden sm:inline">Ver</span> detalle
                         </a>
                         <!-- Enlace a eliminar (con estilo sutil pero distinguible) -->
+                        {% if perms.gestor_proyectos.delete_proyecto %}
                         <a href="{% url 'eliminar_proyecto' proyecto.id %}"
                             onclick="return confirm('¿Está seguro de eliminar el proyecto?')"
                             class="inline-flex items-center gap-1.5 px-4 py-2 bg-rose-50 text-rose-600 text-sm font-medium rounded-xl border border-rose-200/60 hover:bg-rose-100 hover:border-rose-300 transition-all duration-150 shadow-sm hover:shadow">
                             <i class="fa-regular fa-trash-can"></i>
                             <span class="hidden sm:inline">Eliminar</span>
                         </a>
+                        {% endif %}
                     </div>
                 </div>
             </li>

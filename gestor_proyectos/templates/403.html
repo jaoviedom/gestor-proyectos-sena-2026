@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acceso Denegado - 403</title>
+    <!-- Tailwind CSS v4 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #eef2ff 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            padding: 20px;
+        }
+        .error-card {
+            animation: float 6s ease-in-out infinite;
+        }
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        .lock-icon {
+            animation: pulse 2s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        .bg-pattern {
+            background-image: radial-gradient(circle at 20% 50%, rgba(99, 102, 241, 0.05) 0%, transparent 50%),
+                              radial-gradient(circle at 80% 50%, rgba(139, 92, 246, 0.05) 0%, transparent 50%);
+        }
+    </style>
+</head>
+<body>
+    <div class="w-full max-w-2xl bg-pattern">
+        <div class="bg-white rounded-2xl shadow-2xl border border-slate-200/60 overflow-hidden error-card">
+            <!-- Cabecera con gradiente -->
+            <div class="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 px-8 py-12 text-center relative overflow-hidden">
+                <!-- Decoración de fondo -->
+                <div class="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
+                <div class="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24"></div>
+                
+                <!-- Icono de candado -->
+                <div class="lock-icon relative z-10">
+                    <div class="w-28 h-28 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center mx-auto shadow-lg ring-4 ring-white/30">
+                        <i class="fas fa-lock text-6xl text-white"></i>
+                    </div>
+                </div>
+                
+                <!-- Código de error -->
+                <div class="relative z-10 mt-4">
+                    <span class="inline-block bg-white/20 backdrop-blur-sm text-white font-bold text-sm px-4 py-1.5 rounded-full">
+                        Error 403
+                    </span>
+                </div>
+            </div>
+
+            <!-- Contenido -->
+            <div class="px-8 py-10 text-center">
+                <!-- Título -->
+                <h1 class="text-3xl font-bold text-slate-800 mb-3">
+                    Acceso Denegado
+                </h1>
+                
+                <!-- Descripción -->
+                <p class="text-slate-600 text-base leading-relaxed max-w-md mx-auto">
+                    Lo sentimos, no tienes permisos para acceder a esta página o recurso.
+                </p>
+
+                <!-- Razones comunes -->
+                <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-3 text-left">
+                    <div class="bg-slate-50 rounded-lg p-3 flex items-start gap-3">
+                        <i class="fas fa-user-shield text-indigo-500 text-lg mt-0.5"></i>
+                        <div>
+                            <p class="text-xs font-semibold text-slate-700">Permisos insuficientes</p>
+                            <p class="text-xs text-slate-500">Tu cuenta no tiene los privilegios necesarios</p>
+                        </div>
+                    </div>
+                    <div class="bg-slate-50 rounded-lg p-3 flex items-start gap-3">
+                        <i class="fas fa-key text-indigo-500 text-lg mt-0.5"></i>
+                        <div>
+                            <p class="text-xs font-semibold text-slate-700">Sesión expirada</p>
+                            <p class="text-xs text-slate-500">Tu sesión puede haber caducado</p>
+                        </div>
+                    </div>
+                    <div class="bg-slate-50 rounded-lg p-3 flex items-start gap-3">
+                        <i class="fas fa-ban text-indigo-500 text-lg mt-0.5"></i>
+                        <div>
+                            <p class="text-xs font-semibold text-slate-700">Recurso restringido</p>
+                            <p class="text-xs text-slate-500">Esta área está restringida para ciertos usuarios</p>
+                        </div>
+                    </div>
+                    <div class="bg-slate-50 rounded-lg p-3 flex items-start gap-3">
+                        <i class="fas fa-clock text-indigo-500 text-lg mt-0.5"></i>
+                        <div>
+                            <p class="text-xs font-semibold text-slate-700">Acceso temporal</p>
+                            <p class="text-xs text-slate-500">El acceso puede estar disponible en otro momento</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Línea divisoria -->
+                <div class="my-8 border-t border-slate-200/60"></div>
+
+                <!-- Botones de acción -->
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <a href="/" 
+                       class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg transition-all shadow-md hover:shadow-lg">
+                        <i class="fas fa-home"></i>
+                        Ir al inicio
+                    </a>
+                    <button onclick="history.back()" 
+                            class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium rounded-lg transition-all">
+                        <i class="fas fa-arrow-left"></i>
+                        Volver atrás
+                    </button>
+                    <a href="{% url 'login' %}" 
+                       class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-lg transition-all shadow-md hover:shadow-lg">
+                        <i class="fas fa-sign-in-alt"></i>
+                        Iniciar sesión
+                    </a>
+                </div>
+
+                <!-- Código de error técnico -->
+                <div class="mt-8 pt-6 border-t border-slate-200/60">
+                    <p class="text-xs text-slate-400">
+                        <i class="fas fa-code mr-1"></i>
+                        Código: 403 - No autorizado
+                        <span class="mx-2">·</span>
+                        <i class="far fa-clock mr-1"></i>
+                        {{ now|date:"d/m/Y H:i" }}
+                    </p>
+                    <p class="text-xs text-slate-400 mt-1">
+                        Si crees que esto es un error, contacta al administrador del sistema.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Footer del error -->
+            <div class="bg-slate-50/80 px-8 py-4 border-t border-slate-200/60 text-center">
+                <p class="text-xs text-slate-400">
+                    <i class="fas fa-shield-alt mr-1"></i>
+                    Gestor de Proyectos · Sistema de seguridad
+                </p>
+            </div>
+        </div>
+
+        <!-- Información adicional -->
+        <div class="mt-6 text-center">
+            <p class="text-xs text-slate-400">
+                ¿Necesitas ayuda? 
+                <a href="#" class="text-indigo-500 hover:text-indigo-600 font-medium">Contactar soporte</a>
+            </p>
+        </div>
+    </div>
+</body>
+</html>

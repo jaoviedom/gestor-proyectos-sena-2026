@@ -47,5 +47,10 @@ class Tarea(models.Model):
     default='PENDIENTE'
   )
 
+  class Meta:
+    permissions = [
+      ("can_change_status", "Puede cambiar el estado de la tarea"),
+    ]
+
   def __str__(self):
     return self.titulo + " (" + self.proyecto.nombre + ")"

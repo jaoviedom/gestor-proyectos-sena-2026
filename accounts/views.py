@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import User, Group, Permission
 from django.contrib.auth.decorators import user_passes_test
 
 def registro(request):
@@ -114,3 +114,57 @@ def eliminar_usuario_grupo(request, id_grupo):
     return redirect('editar_grupo', id_grupo=grupo.id)
 
   return render(request, 'editar_grupo', id_grupo=grupo.id)
+
+@user_passes_test(es_admin)
+def permisos(request):
+  grupos = Group.objects.all().order_by('name')
+  # Obtiene todos los permisos junto con su tipo de contenido relacionado.
+  lista_permisos = Permission.objects.select_related('content_type').order_by(
+    # Ordena primero por la aplicación a la que pertenece el permiso.
+    'content_type__app_label', 'content_type__model', 'name'
+    # Cierra la configuración del ordenamiento.
+  )
+
+  # Obtiene el grupo enviado por POST al guardar o por GET al cambiar de grupo.
+  
+  # grupo_id = request.POST.get('grupo') if request.method == 'POST' else request.GET.get('grupo')
+  if request.method == 'POST':
+    grupo_id = request.POST.get('grupo')
+  else:
+    grupo_id = request.GET.get('grupo')
+  
+
+  # Busca el grupo indicado o selecciona el primer grupo disponible.
+  
+  # grupo_seleccionado = get_object_or_404(Group, id=grupo_id) if grupo_id else grupos.first()
+  if grupo_id:
+    grupo_seleccionado = get_object_or_404(Group, id=grupo_id)
+  else:
+    grupo_seleccionado = grupos.first()
+
+  # Comprueba si el formulario fue enviado para guardar cambios.
+  if request.method == 'POST':
+    # Obtiene todos los IDs de permisos marcados en el checklist.
+    permisos_ids = request.POST.getlist('permisos')
+    # Busca en la base de datos los permisos cuyos IDs fueron enviados.
+    permisos_seleccionados = Permission.objects.filter(id__in=permisos_ids)
+    # Reemplaza los permisos actuales del grupo por los seleccionados.
+    grupo_seleccionado.permissions.set(permisos_seleccionados)
+    # Regresa a la página mostrando nuevamente el grupo actualizado.
+    return redirect(f'{request.path}?grupo={grupo_seleccionado.id}')
+
+  # Crea un conjunto con los IDs de permisos que ya tiene el grupo.
+  permisos_grupo = set(grupo_seleccionado.permissions.values_list('id', flat=True)) if grupo_seleccionado else set()
+  # Renderiza la plantilla de permisos con todos los datos necesarios.
+  return render(request, 'permisos.html', {
+    # Envía a la plantilla la lista completa de permisos.
+    'permisos': lista_permisos,
+    # Envía a la plantilla la lista de grupos disponibles.
+    'grupos': grupos,
+    # Envía a la plantilla el grupo actualmente seleccionado.
+    'grupo_seleccionado': grupo_seleccionado,
+    # Envía los IDs de permisos para marcar los checkboxes correspondientes.
+    'permisos_grupo': permisos_grupo,
+    # Cierra el diccionario de contexto de la plantilla.
+    })
+  

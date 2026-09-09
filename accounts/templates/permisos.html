@@ -1,0 +1,37 @@
+{% extends 'layouts/base.html' %}
+{% block title %}Permisos{% endblock %}
+
+{% block content %}
+
+<form method="get">
+  <label for="grupo">Grupo</label>
+  <select name="grupo" id="grupo" onchange="this.form.submit()">
+    {% for grupo in grupos %}
+      <option value="{{ grupo.id }}" {% if grupo.id == grupo_seleccionado.id %}selected{% endif %}>{{ grupo.name }}</option>
+    {% endfor %}
+  </select>
+</form>
+
+{% if grupo_seleccionado %}
+  <form method="post">
+    {% csrf_token %}
+    <input type="hidden" name="grupo" value="{{ grupo_seleccionado.id }}">
+
+    <fieldset>
+      <legend>Permisos de grupo: {{ grupo_seleccionado.name }}</legend>
+      {% for permiso in permisos %}
+        <label>
+          <input type="checkbox" name="permisos" value="{{ permiso.id }}" {% if permiso.id in permisos_grupo %}checked{% endif %}>
+          {{ permiso.name }} ({{ permiso.codename }})
+        </label><br>
+      {% empty %}
+        <p>No hay permisos disponibles.</p>
+      {% endfor %}
+    </fieldset>
+
+    <button type="submit">Guardar permisos</button>
+  </form>
+{% else %}
+  <p>No hay grupos creados.</p>
+{% endif %}
+{% endblock %}

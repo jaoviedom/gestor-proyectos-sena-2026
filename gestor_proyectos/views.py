@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.http import require_POST
 from django.http import HttpResponse
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from .models import Proyecto, Tarea
 
 @login_required
@@ -44,6 +44,7 @@ def nuevo_proyecto(request):
 
   return render(request, 'nuevo-proyecto.html')
 
+@permission_required('gestor_proyectos.delete_proyecto', raise_exception=True)
 def eliminar_proyecto(request, id):
   proyecto = Proyecto.objects.get(id=id)
   proyecto.delete()

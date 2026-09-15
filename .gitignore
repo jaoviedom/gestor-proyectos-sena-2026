@@ -5,7 +5,6 @@
 db.sqlite3
 
 # Caché
-__pycache__/
-*.py[cod]
-*.pyc
+**/__pycache__/
+**/*.py[cod]
 *$py.class
